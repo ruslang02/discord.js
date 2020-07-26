@@ -118,8 +118,7 @@ class Client extends BaseClient {
     /**
      * All of the {@link Channel}s that the client is currently handling, mapped by their IDs -
      * as long as sharding isn't being used, this will be *every* channel in *every* guild the bot
-     * is a member of. Note that DM channels will not be initially cached, and thus not be present
-     * in the Manager without their explicit fetching or use.
+     * is a member of.
      * @type {ChannelManager}
      */
     this.channels = new ChannelManager(this);

@@ -16,6 +16,9 @@ module.exports = (client, { d: data }, shard) => {
     guild.shardID = shard.id;
     client.guilds.add(guild);
   }
+  for (const privateDM of data.private_channels) {
+    client.channels.add(privateDM);
+  }
 
   shard.checkReady();
 };
