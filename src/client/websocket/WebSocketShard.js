@@ -477,7 +477,8 @@ class WebSocketShard extends EventEmitter {
     }
     // Step 2. Create a 15s timeout that will mark the shard as ready if there are still unavailable guilds
     this.readyTimeout = this.manager.client.setTimeout(() => {
-      this.debug(`Shard did not receive any more guild packets in 15 seconds.
+      this.debug(`Shard did not receive any more guild packets in ${this.manager.client.options.waitForGuildsTimeout /
+        1000} seconds.
   Unavailable guild count: ${this.expectedGuilds.size}`);
 
       this.readyTimeout = undefined;
@@ -485,7 +486,7 @@ class WebSocketShard extends EventEmitter {
       this.status = Status.READY;
 
       this.emit(ShardEvents.ALL_READY, this.expectedGuilds);
-    }, 15000);
+    }, this.manager.client.options.waitForGuildsTimeout);
   }
 
   /**

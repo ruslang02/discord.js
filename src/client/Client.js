@@ -400,6 +400,16 @@ class Client extends BaseClient {
     if (typeof options.ws.intents !== 'undefined') {
       options.ws.intents = Intents.resolve(options.ws.intents);
     }
+    if (typeof options.useUserGateway !== 'boolean') {
+      throw new TypeError('CLIENT_INVALID_OPTION', 'useUserGateway', 'a boolean');
+    }
+    if (
+      typeof options.waitForGuildsTimeout !== 'number' ||
+      isNaN(options.waitForGuildsTimeout) ||
+      options.waitForGuildsTimeout < 0
+    ) {
+      throw new TypeError('CLIENT_INVALID_OPTION', 'waitForGuildsTimeout', 'a number greater than or equal to 0');
+    }
     if (typeof options.shardCount !== 'number' || isNaN(options.shardCount) || options.shardCount < 1) {
       throw new TypeError('CLIENT_INVALID_OPTION', 'shardCount', 'a number greater than or equal to 1');
     }
