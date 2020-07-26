@@ -1,5 +1,6 @@
 'use strict';
 
+const ClientUserSettings = require('./ClientUserSettings');
 const DataResolver = require('../util/DataResolver');
 const Structures = require('../util/Structures');
 
@@ -9,8 +10,9 @@ const Structures = require('../util/Structures');
  */
 class ClientUser extends Structures.get('User') {
   constructor(client, data) {
-    super(client, data);
+    super(client, data.user);
     this._typing = new Map();
+    this.settings = data.user_settings ? new ClientUserSettings(this, data.user_settings) : null;
   }
 
   _patch(data) {
@@ -34,6 +36,32 @@ class ClientUser extends Structures.get('User') {
       this.mfaEnabled = null;
     }
 
+    if ('email' in data) {
+      /**
+       * The email of this account
+       * <warn>This is only filled when using a user account.</warn>
+       * @type {?string}
+       */
+      this.email = typeof data.email === 'string' ? data.email : null;
+    }
+
+    if ('premium' in data) {
+      /**
+       * If the user has Discord premium (nitro)
+       * <warn>This is only filled when using a user account.</warn>
+       * @type {?boolean}
+       */
+      this.premium = typeof data.premium === 'boolean' ? data.premium : null;
+    }
+    if ('user_settings' in data) {
+      /**
+       * Various settings for this user
+       * <warn>This is only filled when using a user account.</warn>
+       * @type {?ClientUserSettings}
+       * @deprecated
+       */
+      this.settings = data.user_settings ? new ClientUserSettings(this, data.user_settings) : null;
+    }
     if (data.token) this.client.token = data.token;
   }
 
