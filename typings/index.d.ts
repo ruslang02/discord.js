@@ -318,7 +318,6 @@ declare module 'discord.js' {
     };
     browser: boolean;
     DefaultOptions: ClientOptions;
-    UserAgent: string | null;
     Endpoints: {
       botGateway: string;
       invite: (root: string, code: string) => string;
@@ -2269,6 +2268,7 @@ declare module 'discord.js' {
     messageSweepInterval?: number;
     fetchAllMembers?: boolean;
     disableMentions?: 'none' | 'all' | 'everyone';
+    userAgent?: string | null;
     allowedMentions?: MessageMentionOptions;
     partials?: PartialTypes[];
     restWsBridgeTimeout?: number;

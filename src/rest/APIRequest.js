@@ -4,7 +4,7 @@ const https = require('https');
 const FormData = require('@discordjs/form-data');
 const AbortController = require('abort-controller');
 const fetch = require('node-fetch');
-const { browser, UserAgent } = require('../util/Constants');
+const { browser } = require('../util/Constants');
 
 if (https.Agent) var agent = new https.Agent({ keepAlive: true });
 
@@ -36,7 +36,7 @@ class APIRequest {
 
     if (this.options.auth !== false) headers.Authorization = this.rest.getAuth();
     if (this.options.reason) headers['X-Audit-Log-Reason'] = encodeURIComponent(this.options.reason);
-    if (!browser) headers['User-Agent'] = UserAgent;
+    if (!browser && this.client.options.userAgent) headers['User-Agent'] = this.client.options.userAgent;
     if (this.options.headers) headers = Object.assign(headers, this.options.headers);
 
     let body;
