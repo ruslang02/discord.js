@@ -118,8 +118,7 @@ class Client extends BaseClient {
     /**
      * All of the {@link Channel}s that the client is currently handling, mapped by their IDs -
      * as long as sharding isn't being used, this will be *every* channel in *every* guild the bot
-     * is a member of. Note that DM channels will not be initially cached, and thus not be present
-     * in the Manager without their explicit fetching or use.
+     * is a member of.
      * @type {ChannelManager}
      */
     this.channels = new ChannelManager(this);
@@ -399,6 +398,16 @@ class Client extends BaseClient {
   _validateOptions(options = this.options) {
     if (typeof options.ws.intents !== 'undefined') {
       options.ws.intents = Intents.resolve(options.ws.intents);
+    }
+    if (typeof options.useUserGateway !== 'boolean') {
+      throw new TypeError('CLIENT_INVALID_OPTION', 'useUserGateway', 'a boolean');
+    }
+    if (
+      typeof options.waitForGuildsTimeout !== 'number' ||
+      isNaN(options.waitForGuildsTimeout) ||
+      options.waitForGuildsTimeout < 0
+    ) {
+      throw new TypeError('CLIENT_INVALID_OPTION', 'waitForGuildsTimeout', 'a number greater than or equal to 0');
     }
     if (typeof options.shardCount !== 'number' || isNaN(options.shardCount) || options.shardCount < 1) {
       throw new TypeError('CLIENT_INVALID_OPTION', 'shardCount', 'a number greater than or equal to 1');

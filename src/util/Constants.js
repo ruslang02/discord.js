@@ -7,6 +7,9 @@ const browser = (exports.browser = typeof window !== 'undefined');
 /**
  * Options for a client.
  * @typedef {Object} ClientOptions
+ * @property {boolean} [useUserGateway=false] Whether to use the user gateway instead of the one provided for bots
+ * @property {number} [waitForGuildsTimeout=15000] How long the shard should wait for all guilds to become available
+ * before firing a READY event
  * @property {number|number[]|string} [shards] ID of the shard to run, or an array of shard IDs. If not specified,
  * the client will spawn {@link ClientOptions#shardCount} shards. If set to `auto`, it will fetch the
  * recommended amount of shards from Discord and spawn that amount
@@ -40,6 +43,8 @@ const browser = (exports.browser = typeof window !== 'undefined');
  * @property {HTTPOptions} [http] HTTP options
  */
 exports.DefaultOptions = {
+  useUserGateway: false,
+  waitForGuildsTimeout: 15000,
   shardCount: 1,
   messageCacheMaxSize: 200,
   messageCacheLifetime: 0,

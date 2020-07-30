@@ -251,6 +251,33 @@ declare module 'discord.js' {
     public setUsername(username: string): Promise<ClientUser>;
   }
 
+  export class ClientUserSettings {
+    constructor(user: User, data: object);
+    private patch(data: object): void;
+
+    public convertEmoticons: boolean;
+    public defaultGuildsRestricted: boolean;
+    public detectPlatformAccounts: boolean;
+    public developerMode: boolean;
+    public enableTTSCommand: boolean;
+    public explicitContentFilter: 'DISABLED' | 'NON_FRIENDS' | 'FRIENDS_AND_NON_FRIENDS' | string;
+    public friendsSources: { all: boolean; mutualGuilds: boolean; mutualFriends: boolean };
+    public guildsPositions: Snowflake[];
+    public inlineAttachmentMedia: boolean;
+    public inlineEmbedMedia: boolean;
+    public locale: string;
+    public messageDisplayCompact: boolean;
+    public renderReactions: boolean;
+    public restrictedGuilds: Snowflake[];
+    public showCurrentGame: boolean;
+    public status: PresenceStatus;
+    public theme: string;
+    public addRestrictedGuild(guild: Guild): Promise<Guild>;
+    public removeRestrictedGuild(guild: Guild): Promise<Guild>;
+    public setGuildPosition(guild: Guild, position: number, relative?: boolean): Promise<Guild>;
+    public update(name: string, value: any): Promise<object>;
+  }
+
   export class ClientVoiceManager {
     constructor(client: Client);
     public readonly client: Client;
@@ -641,6 +668,7 @@ declare module 'discord.js' {
     public readonly owner: GuildMember | null;
     public ownerID: Snowflake;
     public readonly partnered: boolean;
+    public readonly position: number | null;
     public premiumSubscriptionCount: number | null;
     public premiumTier: PremiumTier;
     public presences: PresenceManager;
@@ -2261,6 +2289,8 @@ declare module 'discord.js' {
   }
 
   interface ClientOptions {
+    useUserGateway?: boolean;
+    waitForGuildsTimeout?: number;
     shards?: number | number[] | 'auto';
     shardCount?: number;
     messageCacheMaxSize?: number;

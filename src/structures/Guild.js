@@ -573,6 +573,18 @@ class Guild extends Base {
   }
 
   /**
+   * The position of this guild
+   * <warn>This is only available when using a user account.</warn>
+   * @type {?number}
+   * @readonly
+   */
+  get position() {
+    if (this.client.user.bot) return null;
+    if (!this.client.user.settings.guildPositions) return null;
+    return this.client.user.settings.guildPositions.indexOf(this.id);
+  }
+
+  /**
    * Public updates channel for this guild
    * <info>This is only available on guilds with the `PUBLIC` feature</info>
    * @type {?TextChannel}
