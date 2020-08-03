@@ -29,7 +29,7 @@ class ClientPresence extends Presence {
     return this;
   }
 
-  async _parse({ status, since, afk, activity }) {
+  async _parse({ status, since, afk, activity, activities }) {
     const applicationID = activity && (activity.application ? activity.application.id || activity.application : null);
     let assets = new Collection();
     if (activity) {
@@ -44,32 +44,33 @@ class ClientPresence extends Presence {
     }
 
     const packet = {
+      activities,
       afk: afk != null ? afk : false, // eslint-disable-line eqeqeq
-      since: since != null ? since : null, // eslint-disable-line eqeqeq
+      since: since != null ? since : 0, // eslint-disable-line eqeqeq
       status: status || this.status,
-      game: activity
-        ? {
-            type: activity.type,
-            name: activity.name,
-            url: activity.url,
-            details: activity.details || undefined,
-            state: activity.state || undefined,
-            assets: activity.assets
-              ? {
-                  large_text: activity.assets.largeText || undefined,
-                  small_text: activity.assets.smallText || undefined,
-                  large_image: assets.get(activity.assets.largeImage) || activity.assets.largeImage,
-                  small_image: assets.get(activity.assets.smallImage) || activity.assets.smallImage,
-                }
-              : undefined,
-            timestamps: activity.timestamps || undefined,
-            party: activity.party || undefined,
-            application_id: applicationID || undefined,
-            secrets: activity.secrets || undefined,
-            instance: activity.instance || undefined,
-          }
-        : null,
     };
+    if (activity) {
+      packet.game = {
+        type: activity.type,
+        name: activity.name,
+        url: activity.url,
+        details: activity.details || undefined,
+        state: activity.state || undefined,
+        assets: activity.assets
+          ? {
+              large_text: activity.assets.largeText || undefined,
+              small_text: activity.assets.smallText || undefined,
+              large_image: assets.get(activity.assets.largeImage) || activity.assets.largeImage,
+              small_image: assets.get(activity.assets.smallImage) || activity.assets.smallImage,
+            }
+          : undefined,
+        timestamps: activity.timestamps || undefined,
+        party: activity.party || undefined,
+        application_id: applicationID || undefined,
+        secrets: activity.secrets || undefined,
+        instance: activity.instance || undefined,
+      };
+    }
 
     if ((status || afk || since) && !activity) {
       packet.game = this.activities[0] || null;

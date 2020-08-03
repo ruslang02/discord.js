@@ -136,12 +136,28 @@ class ClientUser extends Structures.get('User') {
    * @returns {Promise<Object>}
    * @example
    * // Set the client user's custom status
-   * client.user.setCustomStatus({  })
+   * client.user.setCustomStatus({ text: "Happy", emoji_name: "😀" })
    *   .then(console.log)
    *   .catch(console.error);
    */
-  setCustomStatus(data) {
-    return this.settings.update('custom_status', data);
+  async setCustomStatus(data) {
+    await this.client.presence.set({
+      activities: [
+        {
+          type: 4,
+          state: data.text || null,
+          name: 'Custom Status',
+          emoji: {
+            id: data.emoji_id || null,
+            name: data.emoji_name || null,
+            animated: false,
+          },
+        },
+      ],
+    });
+    const newSettings = await this.settings.update('custom_status', data);
+    this.settings._patch(newSettings);
+    return newSettings;
   }
 
   /**
