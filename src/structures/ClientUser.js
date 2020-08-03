@@ -12,12 +12,17 @@ class ClientUser extends Structures.get('User') {
   constructor(client, data) {
     super(client, data.user);
     this._typing = new Map();
+    /**
+     * Various settings for this user
+     * <warn>This is only filled when using a user account.</warn>
+     * @type {?ClientUserSettings}
+     * @deprecated
+     */
     this.settings = data.user_settings ? new ClientUserSettings(this, data.user_settings) : null;
   }
 
   _patch(data) {
     super._patch(data);
-
     if ('verified' in data) {
       /**
        * Whether or not this account has been verified
@@ -53,16 +58,16 @@ class ClientUser extends Structures.get('User') {
        */
       this.premium = typeof data.premium === 'boolean' ? data.premium : null;
     }
-    if ('user_settings' in data) {
-      /**
-       * Various settings for this user
-       * <warn>This is only filled when using a user account.</warn>
-       * @type {?ClientUserSettings}
-       * @deprecated
-       */
-      this.settings = data.user_settings ? new ClientUserSettings(this, data.user_settings) : null;
-    }
     if (data.token) this.client.token = data.token;
+  }
+
+  /**
+   * ClientUser's custom status
+   * @type {CustomStatus}
+   * @readonly
+   */
+  get customStatus() {
+    return this.settings.customStatus;
   }
 
   /**
@@ -114,6 +119,29 @@ class ClientUser extends Structures.get('User') {
    */
   async setAvatar(avatar) {
     return this.edit({ avatar: await DataResolver.resolveImage(avatar) });
+  }
+
+  /**
+   * Data resembling a raw Discord presence.
+   * @typedef {Object} CustomStatus
+   * @property {string?} [text] Text shown on the status
+   * @property {string?} [expires_at] String representation of Date when the status should clear
+   * @property {string?} [emoji_name] Name of the emoji
+   * @property {Snowflake?} [emoji_id] Snowflake of the emoji
+   */
+
+  /**
+   * Sets the full presence of the client user.
+   * @param {CustomStatus} data Data for the presence
+   * @returns {Promise<Object>}
+   * @example
+   * // Set the client user's custom status
+   * client.user.setCustomStatus({  })
+   *   .then(console.log)
+   *   .catch(console.error);
+   */
+  setCustomStatus(data) {
+    return this.settings.update('custom_status', data);
   }
 
   /**

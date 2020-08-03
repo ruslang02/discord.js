@@ -238,6 +238,7 @@ declare module 'discord.js' {
   }
 
   export class ClientUser extends User {
+    public customStatus: CustomStatus | null;
     public mfaEnabled: boolean;
     public email: string | null;
     public premium: boolean | null;
@@ -246,6 +247,7 @@ declare module 'discord.js' {
     public setActivity(name: string, options?: ActivityOptions): Promise<Presence>;
     public setAFK(afk: boolean): Promise<Presence>;
     public setAvatar(avatar: BufferResolvable | Base64Resolvable): Promise<ClientUser>;
+    public setCustomStatus(status?: CustomStatus): Promise<Object>;
     public setPresence(data: PresenceData): Promise<Presence>;
     public setStatus(status: PresenceStatusData, shardID?: number | number[]): Promise<Presence>;
     public setUsername(username: string): Promise<ClientUser>;
@@ -253,9 +255,10 @@ declare module 'discord.js' {
 
   export class ClientUserSettings {
     constructor(user: User, data: object);
-    private patch(data: object): void;
+    private _patch(data: object): void;
 
     public convertEmoticons: boolean;
+    public customStatus: CustomStatus | null;
     public defaultGuildsRestricted: boolean;
     public detectPlatformAccounts: boolean;
     public developerMode: boolean;
@@ -2365,6 +2368,13 @@ declare module 'discord.js' {
     | number
     | string;
 
+  interface CustomStatus {
+    text?: string;
+    expires_at?: string;
+    emoji_name?: string;
+    emoji_id?: Snowflake;
+  }
+
   interface CrosspostedChannel {
     channelID: Snowflake;
     guildID: Snowflake;
@@ -3135,6 +3145,7 @@ declare module 'discord.js' {
     | 'MESSAGE_REACTION_REMOVE'
     | 'MESSAGE_REACTION_REMOVE_ALL'
     | 'MESSAGE_REACTION_REMOVE_EMOJI'
+    | 'USER_SETTINGS_UPDATE'
     | 'USER_UPDATE'
     | 'PRESENCE_UPDATE'
     | 'TYPING_START'

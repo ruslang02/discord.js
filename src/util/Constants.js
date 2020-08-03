@@ -105,6 +105,13 @@ exports.UserSettingsMap = {
   convert_emoticons: 'convertEmoticons',
 
   /**
+   * The current custom status of the user.
+   * @name ClientUserSettings#customStatus
+   * @type {CustomStatus}
+   */
+  custom_status: 'customStatus',
+
+  /**
    * If new guilds should automatically disable DMs between you and its members
    * @name ClientUserSettings#defaultGuildsRestricted
    * @type {boolean}
@@ -187,6 +194,13 @@ exports.UserSettingsMap = {
    * @type {boolean}
    */
   render_reactions: 'renderReactions',
+
+  /**
+   * Array of folders which contain snowflake IDs for guilds, in the order they appear in the Discord client
+   * @name ClientUserSettings#guildFolders
+   * @type {{name?: string, id?: number, guild_ids: Snowflake[], color?: number}[]}
+   */
+  guild_folders: 'guildPositions',
 
   /**
    * Array of snowflake IDs for guilds, in the order they appear in the Discord client
@@ -510,6 +524,7 @@ exports.WSEvents = keyMirror([
   'MESSAGE_REACTION_REMOVE',
   'MESSAGE_REACTION_REMOVE_ALL',
   'MESSAGE_REACTION_REMOVE_EMOJI',
+  'USER_SETTINGS_UPDATE',
   'USER_UPDATE',
   'PRESENCE_UPDATE',
   'TYPING_START',

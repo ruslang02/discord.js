@@ -9,7 +9,7 @@ const Util = require('../util/Util');
 class ClientUserSettings {
   constructor(user, data) {
     this.user = user;
-    this.patch(data);
+    this._patch(data);
   }
 
   /**
@@ -18,7 +18,7 @@ class ClientUserSettings {
    * @returns {void}
    * @private
    */
-  patch(data) {
+  _patch(data) {
     for (const key of Object.keys(Constants.UserSettingsMap)) {
       const value = Constants.UserSettingsMap[key];
       if (!(key in data)) continue;
@@ -37,7 +37,7 @@ class ClientUserSettings {
    * @returns {Promise<Object>}
    */
   update(name, value) {
-    return this.user.client.rest.methods.patchUserSettings({ [name]: value });
+    return this.user.client.api.users('@me').settings.patch({ data: { [name]: value } });
   }
 
   /**

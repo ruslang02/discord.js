@@ -4,7 +4,7 @@ let ClientUser;
 
 module.exports = (client, { d: data }, shard) => {
   if (client.user) {
-    client.user._patch(data.user);
+    client.user._patch(data);
   } else {
     if (!ClientUser) ClientUser = require('../../../structures/ClientUser');
     const clientUser = new ClientUser(client, data);
