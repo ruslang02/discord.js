@@ -243,6 +243,7 @@ declare module 'discord.js' {
     public email: string | null;
     public premium: boolean | null;
     public verified: boolean;
+    public acceptInvite(code: Invite | string): Promise<Guild>;
     public setActivity(options?: ActivityOptions): Promise<Presence>;
     public setActivity(name: string, options?: ActivityOptions): Promise<Presence>;
     public setAFK(afk: boolean): Promise<Presence>;
@@ -410,6 +411,7 @@ declare module 'discord.js' {
       MESSAGE_REACTION_ADD: 'messageReactionAdd';
       MESSAGE_REACTION_REMOVE: 'messageReactionRemove';
       MESSAGE_REACTION_REMOVE_ALL: 'messageReactionRemoveAll';
+      USER_SETTINGS_UPDATE: 'userSettingsUpdate';
       USER_UPDATE: 'userUpdate';
       PRESENCE_UPDATE: 'presenceUpdate';
       VOICE_STATE_UPDATE: 'voiceStateUpdate';

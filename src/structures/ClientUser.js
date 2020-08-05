@@ -1,6 +1,7 @@
 'use strict';
 
 const ClientUserSettings = require('./ClientUserSettings');
+const Constants = require('../util/Constants');
 const DataResolver = require('../util/DataResolver');
 const Structures = require('../util/Structures');
 
@@ -77,6 +78,35 @@ class ClientUser extends Structures.get('User') {
    */
   get presence() {
     return this.client.presence;
+  }
+
+  /**
+   * Accepts an invite to join a guild.
+   * <warn>This is only available when using a user account.</warn>
+   * @param {Invite|string} code Invite or code to accept
+   * @returns {Promise<Guild>} Joined guild
+   */
+  acceptInvite(code) {
+    if (code.id) code = code.id;
+    return new Promise((resolve, reject) =>
+      this.client.api
+        .invite(code)
+        .post()
+        .then(res => {
+          const handler = guild => {
+            if (guild.id === res.id) {
+              resolve(guild);
+              this.client.removeListener(Constants.Events.GUILD_CREATE, handler);
+            }
+          };
+          this.client.on(Constants.Events.GUILD_CREATE, handler);
+          this.client.setTimeout(() => {
+            this.client.removeListener(Constants.Events.GUILD_CREATE, handler);
+            reject(new Error('Accepting invite timed out'));
+          }, 120e3);
+        })
+        .catch(() => reject(new Error('Invite code is not valid'))),
+    );
   }
 
   edit(data) {
