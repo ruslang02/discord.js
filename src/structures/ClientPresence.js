@@ -80,7 +80,6 @@ class ClientPresence extends Presence {
       packet.game.type =
         typeof packet.game.type === 'number' ? packet.game.type : ActivityTypes.indexOf(packet.game.type);
     }
-    console.log(packet);
     return packet;
   }
 }
